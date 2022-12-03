@@ -8,12 +8,14 @@ export default function KYC() {
   const [aadhaar, setAadhaar] = useState();
   const [dob, setDob] = useState();
 
+  const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [cid, setCid] = useState("randomcidhere");
   const [qrLink, setQrLink] = useState("https://api-staging.polygonid.com/v1/offers-qrcode/2010c6a2-bbff-45ae-90a2-cb82bd3c49e7/download?sessionID=f3b30d04-b741-47c9-8a5a-118c05872059");
 
   const formSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     let body = {
       fname,
@@ -31,10 +33,12 @@ export default function KYC() {
         console.log(response)
         setCid(response.data.cid);
         setQrLink(response.data.qrLink);
+        setLoading(false);
         setDone(true);
       })
       .catch(err => {
-        console.log(err)
+        console.log(err);
+        setLoading(false);
       });
   }
 
@@ -55,7 +59,7 @@ export default function KYC() {
             <img src={qrLink} id="qrLink" name="qrLink" className="block mx-auto my-4 border border-blue-400 rounded-xl"/>
           </div>
         </div> : (
-          <form className="mt-6" onSubmit={formSubmit} action="/lighthouse" method="post">
+          <form className="mt-6" onSubmit={formSubmit}>
             <div className="mb-2 flex align-center">
               <div className="w-3/6 mr-2">
                 <label htmlFor="first" className="block text-sm font-semibold text-blue-500">First Name</label>
@@ -83,8 +87,8 @@ export default function KYC() {
               <input value={ethAddress} readOnly type="text" id="ethereum" name="ethereum" className="block w-full px-4 py-2 mt-2 text-blue-400 bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"/>
             </div>
             <div className="mt-6">
-              <button type="submit" className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-700 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-                Submit
+              <button type="submit" className={`w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform ${loading ? "bg-blue-400" : "bg-blue-700 hover:bg-blue-600 focus:bg-blue-600"} rounded-md focus:outline-none`}>
+                {loading ? "Loading..." : "Submit"}
               </button>
             </div>
           </form>

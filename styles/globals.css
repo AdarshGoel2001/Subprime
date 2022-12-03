@@ -18,6 +18,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.random > div {
+  position: unset !important;
+}
+
 @font-face {
   font-family: "burtons";
   src: url("../public/Burtons.otf");
